@@ -11,6 +11,7 @@ class SpeciesValidationHandler : AbstractValidationHandler() {
             errors.add("Species cannot be empty")
         } else if (!validSpecies.contains(request.species.lowercase())) {
             errors.add("Invalid species. Valid options: ${validSpecies.joinToString()}")
+
         }
 
         return if (errors.isEmpty()) {

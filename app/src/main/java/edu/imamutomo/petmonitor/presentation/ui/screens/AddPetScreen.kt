@@ -34,6 +34,12 @@ fun AddPetScreen(
     var weight by remember { mutableStateOf("") }
     var microchipId by remember { mutableStateOf("") }
 
+    val speciesOptions = listOf("dog", "cat", "bird", "fish", "rabbit",
+        "hamster", "reptile")
+    var expanded by remember { mutableStateOf(false) }
+
+
+
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
             onPetAdded()
@@ -79,12 +85,39 @@ fun AddPetScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                OutlinedTextField(
-                    value = species,
-                    onValueChange = { species = it },
-                    label = { Text("Species (dog, cat, etc.) *") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
+                ) {
+                    OutlinedTextField(
+                        value = species,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Species *") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        speciesOptions.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(option) },
+                                onClick = {
+                                    species = option
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
 
                 OutlinedTextField(
                     value = ownerName,
