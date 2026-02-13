@@ -108,6 +108,33 @@ private fun PetCard(
     onClick: () -> Unit,
     onDelete: () -> Unit
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // ===== Delete Confirmation Dialog =====
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Pet") },
+            text = { Text("Are you sure you want to delete this pet? This action cannot be undone.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDelete()   // call real delete here
+                    }
+                ) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
@@ -135,7 +162,7 @@ private fun PetCard(
                 )
             }
 
-            IconButton(onClick = onDelete) {
+            IconButton(onClick = { showDeleteDialog = true }) {
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = "Delete",
