@@ -46,10 +46,11 @@ class PetDetailViewModel  @Inject constructor(
     private val completeReminderUseCase: CompleteReminderUseCase,
     private val deleteReminderUseCase: DeleteReminderUseCase,
     private val exportDataUseCase: ExportDataUseCase,
-    private val _uiState: MutableStateFlow<PetDetailUiState> = MutableStateFlow(PetDetailUiState()),
-    val uiState: StateFlow<PetDetailUiState> = _uiState.asStateFlow()
+
 
 ) : ViewModel() {
+    private val _uiState: MutableStateFlow<PetDetailUiState> = MutableStateFlow(PetDetailUiState())
+    val uiState: StateFlow<PetDetailUiState> = _uiState.asStateFlow()
 
     fun loadPetDetails(petId: String) {
         viewModelScope.launch {

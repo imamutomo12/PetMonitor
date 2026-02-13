@@ -37,6 +37,11 @@ android {
         jvmToolchain(17)
     }
 
+    hilt {
+        enableAggregatingTask = false
+    }
+
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
