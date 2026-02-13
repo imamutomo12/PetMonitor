@@ -1,18 +1,14 @@
 package edu.imamutomo.petmonitor.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.imamutomo.petmonitor.domain.export.CsvExportVisitor
 import edu.imamutomo.petmonitor.domain.export.ExportFormat
-import edu.imamutomo.petmonitor.domain.export.ExportManager
-import edu.imamutomo.petmonitor.domain.export.JsonExportVisitor
-import edu.imamutomo.petmonitor.domain.export.XmlExportVisitor
+
 import edu.imamutomo.petmonitor.domain.model.pet.Pet
 import edu.imamutomo.petmonitor.domain.model.reminder.ReminderCategory
-import edu.imamutomo.petmonitor.domain.model.schedule.ScheduleTemplateRegistry
 import edu.imamutomo.petmonitor.domain.usecase.CompleteReminderUseCase
-import edu.imamutomo.petmonitor.domain.usecase.CreatePetUseCase
 import edu.imamutomo.petmonitor.domain.usecase.DeleteReminderUseCase
 import edu.imamutomo.petmonitor.domain.usecase.ExportDataUseCase
 import edu.imamutomo.petmonitor.domain.usecase.GetPetDetailsUseCase
@@ -23,7 +19,6 @@ import edu.imamutomo.petmonitor.domain.usecase.UpdatePetUseCase
 import edu.imamutomo.petmonitor.presentation.state.AppStateManager
 import edu.imamutomo.petmonitor.presentation.state.CloneScheduleTemplateUseCase
 import edu.imamutomo.petmonitor.presentation.state.PetDetailUiState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,11 +28,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PetDetailViewModel  @Inject constructor(
-    private val createPetUseCase: CreatePetUseCase,
     private val scheduleReminderUseCase: ScheduleReminderUseCase,
-    private val exportManager: ExportManager,
     private val stateManager: AppStateManager,
-    private val templateRegistry: ScheduleTemplateRegistry,
     private val getPetDetailsUseCase: GetPetDetailsUseCase,
     private val getRemindersForPetUseCase: GetRemindersForPetUseCase,
     private val getScheduleTemplatesUseCase: GetScheduleTemplatesUseCase,
@@ -135,6 +127,7 @@ class PetDetailViewModel  @Inject constructor(
                         val category = try {
                             ReminderCategory.valueOf(item.reminderType)
                         } catch (e: IllegalArgumentException) {
+                            Log.e("PetDetailViewModel", "Invalid reminder type: ${item.reminderType}")
                             return@forEach
                         }
 
